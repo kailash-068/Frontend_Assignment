@@ -69,55 +69,57 @@ npm test             # Run tests
 
 ## 📁 Project Structure
 
+<pre>
 product-explorer/
-├── **tests**/ # Test files (Jest)
-│ ├── components/
-│ │ ├── ui/
-│ │ │ └── Button.test.tsx
-│ │ └── features/
-│ │ └── ProductCard.test.tsx
-│ └── lib/
-│ └── utils/
-│ └── storage.test.ts
+├── __tests__/              <i># Test files (Jest)</i>
+│   ├── components/
+│   │   ├── ui/
+│   │   │   └── Button.test.tsx
+│   │   └── features/
+│   │       └── ProductCard.test.tsx
+│   └── lib/
+│       └── utils/
+│           └── storage.test.ts
 │
 ├── app/
-│ ├── layout.tsx # Root layout
-│ ├── page.tsx # Home page
-│ ├── globals.css # Global styles
-│ └── products/[id]/
-│ └── page.tsx # Product detail page
+│   ├── layout.tsx          <i># Root layout</i>
+│   ├── page.tsx            <i># Home page</i>
+│   ├── globals.css         <i># Global styles</i>
+│   └── products/[id]/
+│       └── page.tsx        <i># Product detail page</i>
 │
 ├── components/
-│ ├── ui/ # Reusable UI components
-│ │ ├── Button.tsx
-│ │ ├── Badge.tsx
-│ │ ├── Pagination.tsx
-│ │ └── ThemeToggle.tsx
-│ │
-│ ├── features/ # Feature components
-│ │ ├── ProductCard.tsx
-│ │ ├── SearchBar.tsx
-│ │ └── SortDropdown.tsx
-│ │
-│ └── layout/ # Layout components
-│ ├── Header.tsx
-│ ├── ProductGrid.tsx
-│ └── ProductDetail.tsx
+│   ├── ui/                 <i># Reusable UI components</i>
+│   │   ├── Button.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Pagination.tsx
+│   │   └── ThemeToggle.tsx
+│   │
+│   ├── features/           <i># Feature components</i>
+│   │   ├── ProductCard.tsx
+│   │   ├── SearchBar.tsx
+│   │   └── SortDropdown.tsx
+│   │
+│   └── layout/             <i># Layout components</i>
+│       ├── Header.tsx
+│       ├── ProductGrid.tsx
+│       └── ProductDetail.tsx
 │
 ├── lib/
-│ ├── api/ # API services
-│ ├── hooks/ # Custom React hooks
-│ ├── utils/ # Utility functions
-│ │ └── storage.ts
-│ └── context/ # React Context
+│   ├── api/                <i># API services</i>
+│   ├── hooks/              <i># Custom React hooks</i>
+│   ├── utils/              <i># Utility functions</i>
+│   │   └── storage.ts
+│   └── context/            <i># React Context</i>
 │
-├── types/ # TypeScript definitions
-├── constants/ # App constants
+├── types/                  <i># TypeScript definitions</i>
+├── constants/              <i># App constants</i>
 │
-├── jest.config.js # Jest configuration
-├── jest.setup.js # Jest setup file
-├── tsconfig.json # TypeScript configuration
-└── package.json # Project dependencies
+├── jest.config.js          <i># Jest configuration</i>
+├── jest.setup.js           <i># Jest setup file</i>
+├── tsconfig.json           <i># TypeScript configuration</i>
+└── package.json            <i># Project dependencies</i>
+</pre>
 
 ## 🎯 Key Implementation
 
@@ -224,16 +226,6 @@ Test coverage includes:
 - State management
 - Utility functions
 - Error handling
-
-## 🚧 Future Enhancements
-
-- [ ] Shopping cart functionality
-- [ ] User authentication
-- [ ] Product reviews and ratings
-- [ ] Advanced filtering (price range, ratings)
-- [ ] Wishlist with cloud sync
-- [ ] Server-side rendering for SEO
-- [ ] Progressive Web App (PWA)
 
 ## 🙏 Acknowledgments
 
