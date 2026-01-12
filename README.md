@@ -1,36 +1,245 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ Product Explorer Dashboard
 
-## Getting Started
+A modern e-commerce product browsing application built with Next.js 14, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-14-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8)
+
+## ✨ Features
+
+### Core Features
+
+- ✅ Product listing with responsive grid layout
+- ✅ Real-time search by product title
+- ✅ Category filtering
+- ✅ Product detail pages with full information
+- ✅ Favorites system with localStorage persistence
+- ✅ Mobile-responsive design
+
+### Bonus Features
+
+- 🎨 Dark mode toggle with system preference detection
+- 📄 Pagination with page numbers
+- 🔄 Sort by price and name
+- ⚡ Performance optimized with React hooks
+- ♿ Full accessibility (WCAG AA compliant)
+- 🧪 Testing setup with Jest
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/yourusername/product-explorer.git
+cd product-explorer
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start            # Start production server
+npm run lint         # Run ESLint
+npm test             # Run tests
+```
 
-## Learn More
+## 📦 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript 5
+- **Styling:** Tailwind CSS 3.3
+- **Icons:** Lucide React
+- **API:** Fake Store API
+- **State:** React Hooks + Context API
+- **Testing:** Jest + React Testing Library
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+product-explorer/
+├── **tests**/ # Test files (Jest)
+│ ├── components/
+│ │ ├── ui/
+│ │ │ └── Button.test.tsx
+│ │ └── features/
+│ │ └── ProductCard.test.tsx
+│ └── lib/
+│ └── utils/
+│ └── storage.test.ts
+│
+├── app/
+│ ├── layout.tsx # Root layout
+│ ├── page.tsx # Home page
+│ ├── globals.css # Global styles
+│ └── products/[id]/
+│ └── page.tsx # Product detail page
+│
+├── components/
+│ ├── ui/ # Reusable UI components
+│ │ ├── Button.tsx
+│ │ ├── Badge.tsx
+│ │ ├── Pagination.tsx
+│ │ └── ThemeToggle.tsx
+│ │
+│ ├── features/ # Feature components
+│ │ ├── ProductCard.tsx
+│ │ ├── SearchBar.tsx
+│ │ └── SortDropdown.tsx
+│ │
+│ └── layout/ # Layout components
+│ ├── Header.tsx
+│ ├── ProductGrid.tsx
+│ └── ProductDetail.tsx
+│
+├── lib/
+│ ├── api/ # API services
+│ ├── hooks/ # Custom React hooks
+│ ├── utils/ # Utility functions
+│ │ └── storage.ts
+│ └── context/ # React Context
+│
+├── types/ # TypeScript definitions
+├── constants/ # App constants
+│
+├── jest.config.js # Jest configuration
+├── jest.setup.js # Jest setup file
+├── tsconfig.json # TypeScript configuration
+└── package.json # Project dependencies
 
-## Deploy on Vercel
+## 🎯 Key Implementation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Custom Hooks
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**useProducts** - Manages product data and filtering
+
+```typescript
+const { products, loading, filters, setSearchQuery } = useProducts();
+```
+
+**useFavorites** - Handles favorites with localStorage
+
+```typescript
+const { favorites, toggleFavorite, favoritesCount } = useFavorites();
+```
+
+**usePagination** - Manages pagination logic
+
+```typescript
+const { currentPage, totalPages, goToPage } = usePagination({
+  totalItems,
+  itemsPerPage,
+});
+```
+
+### Architecture Highlights
+
+- **Atomic Design** - Components organized by complexity
+- **Type Safety** - Full TypeScript with strict mode
+- **Custom Hooks** - Reusable logic extraction
+- **Context API** - Global theme management
+- **LocalStorage** - Client-side data persistence
+
+## 📝 Assumptions
+
+1. **API Availability** - Fake Store API remains stable and accessible
+2. **Browser Support** - Modern browsers with ES6+ support
+3. **Storage** - LocalStorage available (5MB limit acceptable)
+4. **Network** - Stable internet connection for API calls
+5. **Data Scale** - ~100 products (client-side filtering sufficient)
+
+## ⚖️ Trade-offs
+
+| Decision                  | Rationale                                 | Trade-off                            |
+| ------------------------- | ----------------------------------------- | ------------------------------------ |
+| **Client-side rendering** | Better interactivity, real-time filtering | Slower initial load, SEO limitations |
+| **LocalStorage**          | Simple, fast, no backend needed           | Not synced across devices            |
+| **Pagination**            | Better accessibility, clear navigation    | More clicks required                 |
+| **Tailwind CSS**          | Rapid development, small bundle           | Longer class names in JSX            |
+| **Context API**           | Built-in, simple for this scale           | Limited dev tools vs Redux           |
+| **Mock API**              | Free, quick prototyping                   | Limited features, rate limits        |
+
+## 🎨 Design Decisions
+
+### Why Tailwind CSS?
+
+- ✅ Fast development with utility classes
+- ✅ Small production bundle (purges unused styles)
+- ✅ Built-in dark mode support
+- ✅ No runtime CSS-in-JS cost
+
+### Why Pagination over Infinite Scroll?
+
+- ✅ Better for accessibility (keyboard users)
+- ✅ Shows total number of results
+- ✅ Easier to navigate to specific pages
+- ✅ Lower memory footprint
+
+### Why LocalStorage?
+
+- ✅ No backend infrastructure required
+- ✅ Perfect for non-critical data (favorites, theme)
+- ✅ Fast synchronous access
+- ✅ Works offline
+
+## ♿ Accessibility
+
+- ✅ ARIA labels on all interactive elements
+- ✅ Full keyboard navigation support
+- ✅ Focus management and indicators
+- ✅ Screen reader optimized
+- ✅ Skip to main content link
+- ✅ WCAG 2.1 Level AA compliant
+- ✅ Reduced motion support
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Watch mode
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+```
+
+Test coverage includes:
+
+- Component rendering
+- User interactions
+- State management
+- Utility functions
+- Error handling
+
+## 🚧 Future Enhancements
+
+- [ ] Shopping cart functionality
+- [ ] User authentication
+- [ ] Product reviews and ratings
+- [ ] Advanced filtering (price range, ratings)
+- [ ] Wishlist with cloud sync
+- [ ] Server-side rendering for SEO
+- [ ] Progressive Web App (PWA)
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
+- [Fake Store API](https://fakestoreapi.com/) - Mock API
+- [Lucide Icons](https://lucide.dev/) - Icon library
+
+---

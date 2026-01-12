@@ -1,64 +1,169 @@
-import Image from "next/image";
+"use client";
+
+import React, { useEffect } from "react";
+import { ShoppingBag } from "lucide-react";
+import { Header } from "@/components/layout/Header";
+import { ProductGrid } from "@/components/layout/ProductGrid";
+import { LoadingGrid } from "@/components/layout/LoadingGrid";
+import { ProductDetail } from "@/components/layout/ProductDetail";
+import { EmptyState } from "@/components/features/EmptyState";
+import { ErrorState } from "@/components/features/ErrorState";
+import { Pagination } from "@/components/ui/Pagination";
+import { useProducts, useFilteredProducts } from "@/lib/hooks/useProducts";
+import { useFavorites } from "@/lib/hooks/useFavorites";
+import { usePagination } from "@/lib/hooks/usePagination";
+import { paginate } from "@/lib/utils/helpers";
+import { Product } from "@/types";
+import { ITEMS_PER_PAGE } from "@/constants";
 
 export default function Home() {
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
+    null
+  );
+
+  // Custom hooks for state management
+  const {
+    products,
+    loading,
+    error,
+    filters,
+    categories,
+    setSearchQuery,
+    setSelectedCategory,
+    setShowFavoritesOnly,
+    setSortBy,
+    loadProducts,
+  } = useProducts();
+
+  const { favorites, toggleFavorite, favoritesCount } = useFavorites();
+
+  // Get filtered and sorted products
+  const filteredProducts = useFilteredProducts(products, filters, favorites);
+
+  // Pagination
+  const pagination = usePagination({
+    totalItems: filteredProducts.length,
+    itemsPerPage: ITEMS_PER_PAGE,
+  });
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    pagination.resetPagination();
+  }, [
+    filters.searchQuery,
+    filters.selectedCategory,
+    filters.showFavoritesOnly,
+    filters.sortBy,
+  ]);
+
+  // Get paginated products
+  const paginatedProducts = paginate(
+    filteredProducts,
+    pagination.currentPage,
+    ITEMS_PER_PAGE
+  );
+
+  // Handlers
+  const handleViewDetails = (product: Product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleBackToList = () => {
+    setSelectedProduct(null);
+  };
+
+  // Error state
+  if (error) {
+    return <ErrorState message={error} onRetry={loadProducts} />;
+  }
+
+  // Detail view
+  if (selectedProduct) {
+    return (
+      <ProductDetail
+        product={selectedProduct}
+        isFavorite={favorites.includes(selectedProduct.id)}
+        onToggleFavorite={toggleFavorite}
+        onBack={handleBackToList}
+      />
+    );
+  }
+
+  // Main view
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header
+        searchQuery={filters.searchQuery}
+        onSearchChange={setSearchQuery}
+        categories={categories}
+        selectedCategory={filters.selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        favoritesCount={favoritesCount}
+        showFavoritesOnly={filters.showFavoritesOnly}
+        onToggleFavoritesView={() =>
+          setShowFavoritesOnly(!filters.showFavoritesOnly)
+        }
+      />
+
+      <main
+        id="main-content"
+        className="max-w-7xl mx-auto px-4 py-8"
+        role="main"
+      >
+        {loading ? (
+          <div role="status" aria-live="polite" aria-label="Loading products">
+            <LoadingGrid />
+            <span className="sr-only">Loading products...</span>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <EmptyState
+            icon={<ShoppingBag className="w-16 h-16" />}
+            title="No products found"
+            message={
+              filters.showFavoritesOnly
+                ? "No favorites yet. Start adding products you love!"
+                : filters.searchQuery || filters.selectedCategory !== "all"
+                ? "No products match your filters. Try adjusting your search."
+                : "No products available at the moment."
+            }
+          />
+        ) : (
+          <>
+            <div
+              className="flex items-center justify-between mb-6"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <p className="text-gray-600 dark:text-gray-400">
+                Showing{" "}
+                <span className="font-semibold">{filteredProducts.length}</span>{" "}
+                {filteredProducts.length === 1 ? "product" : "products"}
+              </p>
+            </div>
+
+            <div
+              role="region"
+              aria-label="Product list"
+              className="focus:outline-none"
+              tabIndex={-1}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              <ProductGrid
+                products={paginatedProducts}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                onViewDetails={handleViewDetails}
+              />
+            </div>
+
+            <Pagination
+              paginationInfo={pagination.paginationInfo}
+              onPageChange={pagination.goToPage}
+              hasNextPage={pagination.hasNextPage}
+              hasPreviousPage={pagination.hasPreviousPage}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </>
+        )}
       </main>
     </div>
   );
